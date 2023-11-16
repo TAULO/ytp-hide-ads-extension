@@ -1,0 +1,25 @@
+{
+    "name": "ytp-ad-extension",
+    "version": "1.0.0",
+    "description": "Hides, mutes and auto skips, when a YT ad is playing",
+    "manifest_version": 3,
+    "author": "Thomas Taulo",
+    "host_permissions": ["<all_urls>"],
+    "action":{
+        "default_popup": "index.html",
+        "default_title": "Hide YT Ad's"
+    },
+    "background": {
+        "service_worker": "service-worker.js"
+    },
+    "content_scripts": [
+        {
+          "js": [
+            "scripts/hideAds.js"
+          ],
+          "matches": [
+            "https://www.youtube.com/*"
+          ]
+        }
+      ]
+}
