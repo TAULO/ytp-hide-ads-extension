@@ -5,12 +5,15 @@
     "manifest_version": 3,
     "author": "Thomas Taulo",
     "host_permissions": ["<all_urls>"],
+    "permissions": [
+        "storage"
+      ],
     "action":{
         "default_popup": "index.html",
         "default_title": "Hide YT Ad's"
     },
     "background": {
-        "service_worker": "service-worker.js"
+        "service_worker": "background.js"
     },
     "content_scripts": [
         {
