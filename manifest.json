@@ -5,6 +5,9 @@
     "manifest_version": 3,
     "author": "Thomas Taulo",
     "host_permissions": ["<all_urls>"],
+    "icons": {
+        "128": "./logos/youtube-logo-hd-8.png"
+    },
     "permissions": [
         "storage"
       ],

@@ -1,7 +1,8 @@
+console.debug("Hello from, Hide YT Ad's!")
+
 let hasMuted = true
 
 function hide(node) {
-    console.log("Ad is playing")
                         
     // skip ad
     document.querySelector(".ytp-ad-skip-button-modern.ytp-button")?.click()
@@ -29,31 +30,35 @@ function show(node) {
     }
 }
 
-(async () => {
-    console.log("Hello from, Hide YT Ad's!")
+async function handleTimeUpdate(node) {
+    let { enabled } = await chrome.storage.sync.get("enabled")
 
-    if (document.readyState !== "loading") {
-        const video = document.querySelector("#movie_player > div.html5-video-container > video")
-
-        if (video) {
-            // if the video has been paused from some time, the event listner somehow stop listening
-            video.addEventListener("timeupdate", async () => {
-                const { enabled } = await chrome.storage.sync.get("enabled")
-                console.log("On: " + enabled)
-
-                if (enabled) {
-                    const hasAd = document.querySelector(".video-ads.ytp-ad-module").children.length > 0
-                    
-                    if (hasAd) {
-                        hide(video)
-                    } else {
-                        show(video)
-                    }
-                } else {
-                    show(video)
-                }
-            })
+    if (enabled) {
+        const hasAd = document.querySelector(".video-ads.ytp-ad-module").children.length > 0
+        
+        if (hasAd) {
+            hide(node)
+        } else {
+            show(node)
         }
+    } else {
+        show(node)
     }
-})()
+}
+
+let video = document.querySelector("#movie_player > div.html5-video-container > video")
+
+if (video) {
+    // if the video has been paused and played again the script stops
+    // however set interval seems to correct this
+    // video.addEventListener("timeupdate", async () => {
+    //     // video = document.querySelector("#movie_player > div.html5-video-container > video")
+    //     await handleTimeUpdate(video)
+    // })
+
+    setInterval(async () => { 
+        video = document.querySelector("#movie_player > div.html5-video-container > video")
+        await handleTimeUpdate(video)
+    }, 500)
+}
 

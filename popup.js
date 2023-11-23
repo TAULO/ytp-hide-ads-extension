@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Fetch the extension state from storage and update the button
     await chrome.storage.sync.get('enabled', (data) => {
-        extensionState = data.enabled !== undefined ? data.enabled : true;
+        let extensionState = data.enabled !== undefined ? data.enabled : true;
         updateButton(extensionState)
     
         // Add click event listener to the button
@@ -17,6 +17,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Function to update the button text based on the extension state
     function updateButton(state) {
         toggleButton.checked = state
-        toggleButton.innerText = state ? "On" : "Off"
     }
 });      
