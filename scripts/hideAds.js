@@ -2,9 +2,9 @@ console.log("Hejsa! Skip YT Ad's!")
 
 let hasMuted = true
 
-// also remove sponsored videos
-function removeSponsoredVideos() {
-    document.querySelectorAll("ytd-ad-slot-renderer").forEach(parent => {
+// also remove ad's with sponsored text 
+function removeSponsored(query) {
+    document.querySelectorAll(query).forEach(parent => {
         parent?.querySelectorAll(".style-scope.ytd-badge-supported-renderer").forEach(ele => {
             const spons =  ele?.innerHTML
             if (spons === "Sponsored") {
@@ -13,12 +13,6 @@ function removeSponsoredVideos() {
         })
     })
 }
-
-(function foo() {
-    document.querySelectorAll(".ytp-ad-text").forEach(e => {
-        if (e.innerHTML === "Skip") e.click() 
-    })
-})()
 
 function skip(video) {
                         
@@ -75,7 +69,8 @@ setInterval(async () => {
     video = document.querySelector("#movie_player > div.html5-video-container > video")
     const { enabled } = await chrome.storage.sync.get("enabled")
     if (enabled) {
-        removeSponsoredVideos()
+        removeSponsored("ytd-ad-slot-renderer")
+        removeSponsored("ytd-action-companion-ad-renderer")
         video = document.querySelector("#movie_player > div.html5-video-container > video")
         if (video) {
             skipAdd(video, enabled)
