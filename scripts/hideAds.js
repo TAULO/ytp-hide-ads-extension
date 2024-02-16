@@ -1,8 +1,26 @@
-console.debug("Hello from, Hide YT Ad's!")
+console.log("Hejsa! Skip YT Ad's!")
 
 let hasMuted = true
 
-function hide(video) {
+// also remove sponsored videos
+function removeSponsoredVideos() {
+    document.querySelectorAll("ytd-ad-slot-renderer").forEach(parent => {
+        parent?.querySelectorAll(".style-scope.ytd-badge-supported-renderer").forEach(ele => {
+            const spons =  ele?.innerHTML
+            if (spons === "Sponsored") {
+                parent.remove()
+            }
+        })
+    })
+}
+
+(function foo() {
+    document.querySelectorAll(".ytp-ad-text").forEach(e => {
+        if (e.innerHTML === "Skip") e.click() 
+    })
+})()
+
+function skip(video) {
                         
     // skip ad
     document.querySelector(".ytp-ad-skip-button-modern.ytp-button")?.click()
@@ -38,12 +56,11 @@ function show(video) {
     }
 }
 
-async function handleTimeUpdate(video, enabled) {
+function skipAdd(video, enabled) {
     if (enabled) {
-        const hasAd = document.querySelector(".video-ads.ytp-ad-module").children.length > 0
-        
+        const hasAd = document.querySelector(".video-ads.ytp-ad-module")?.children.length > 0   
         if (hasAd) {
-            hide(video)
+            skip(video)
         } else {
             show(video)
         }
@@ -54,14 +71,15 @@ async function handleTimeUpdate(video, enabled) {
 
 let video = document.querySelector("#movie_player > div.html5-video-container > video")
 
-if (video) {
-    setInterval(async () => { 
-        const { enabled } = await chrome.storage.sync.get("enabled")
-
-        if (enabled) {
-            video = document.querySelector("#movie_player > div.html5-video-container > video")
-            await handleTimeUpdate(video, enabled)
+setInterval(async () => {
+    video = document.querySelector("#movie_player > div.html5-video-container > video")
+    const { enabled } = await chrome.storage.sync.get("enabled")
+    if (enabled) {
+        removeSponsoredVideos()
+        video = document.querySelector("#movie_player > div.html5-video-container > video")
+        if (video) {
+            skipAdd(video, enabled)
         }
-    }, 500)
-}
+    }
+}, 500)
 
