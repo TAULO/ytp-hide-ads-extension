@@ -12,6 +12,8 @@ function removeSponsored(query) {
             }
         })
     })
+
+    document.querySelectorAll("ytd-ad-slot-renderer").forEach(node => node?.remove())
 }
 
 function skip(video) {
